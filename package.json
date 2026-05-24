@@ -1,0 +1,9 @@
+{
+  "name": "ss-agentic-ai-factory",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "revenue": "node workflows/revenue.workflow.js",
+    "monitor": "node workflows/monitoring.workflow.js"
+  }
+}
