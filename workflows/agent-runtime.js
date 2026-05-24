@@ -2,12 +2,16 @@ const { runRevenueWorkflow } = require('./revenue.workflow');
 const { runMonitoringWorkflow } = require('./monitoring.workflow');
 const { runAutonomousLoop } = require('./autonomous.loop');
 const { sendTelegram } = require('./live-telegram');
+const { generateSignals } = require('./revenue-signal-loop');
+const { generateOfferPacks } = require('./offer-pack-generator');
 
 async function startAgents() {
   const runtime = {
     revenue_agent: runRevenueWorkflow({ source: 'agent_runtime' }),
     monitoring_agent: runMonitoringWorkflow(),
     operator_agent: runAutonomousLoop(),
+    revenue_signals: generateSignals(),
+    offer_packs: generateOfferPacks(),
     started_at: new Date().toISOString(),
     status: 'running'
   };
