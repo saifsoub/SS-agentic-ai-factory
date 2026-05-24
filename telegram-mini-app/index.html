@@ -13,42 +13,38 @@
   <section class="hero">
     <div class="label">S/ AI Empowered</div>
     <h1>Agent Runtime Mini App</h1>
-    <p class="sub">Telegram control layer for GitHub Actions, agent status, secrets checklist, logs, and operating links.</p>
-    <button onclick="tgAlert('Runtime control loaded')">Telegram Ping</button>
+    <p class="sub">Telegram execution layer for GitHub Actions, runtime orchestration, logs, and operations.</p>
+    <button onclick="runAgents()">Run Agents</button>
+    <button class="ghost" onclick="tgAlert('Telegram runtime connected')">Telegram Ping</button>
     <a class="btn ghost" href="https://github.com/saifsoub/SS-agentic-ai-factory/actions" target="_blank">Open GitHub Actions</a>
   </section>
   <section class="grid">
     <div class="card"><div class="label">Runtime</div><div class="value ok">Ready</div><p class="sub">GitHub Actions scheduled hourly.</p></div>
     <div class="card"><div class="label">Telegram</div><div class="value ok">Connected</div><p class="sub">Bot token and chat id configured in secrets.</p></div>
     <div class="card"><div class="label">Supabase</div><div class="value ok">Prepared</div><p class="sub">Persistence runtime is available.</p></div>
-    <div class="card"><div class="label">Monday</div><div class="value warn">Token Ready</div><p class="sub">Live board mutation still needs final workflow mapping.</p></div>
-  </section>
-  <section class="grid">
-    <div class="card">
-      <div class="label">Secrets Checklist</div>
-      <span class="pill">MONDAY_API_TOKEN</span><span class="pill">SUPABASE_URL</span><span class="pill">SUPABASE_SERVICE_ROLE_KEY</span><span class="pill">TELEGRAM_BOT_TOKEN</span><span class="pill">TELEGRAM_CHAT_ID</span>
-    </div>
-    <div class="card links">
-      <div class="label">Direct Links</div>
-      <p><a href="https://github.com/saifsoub/SS-agentic-ai-factory/settings/secrets/actions" target="_blank">GitHub Secrets</a></p>
-      <p><a href="https://github.com/saifsoub/SS-agentic-ai-factory/actions" target="_blank">Runtime Runs</a></p>
-      <p><a href="https://developer.monday.com/apps" target="_blank">Monday Developer Center</a></p>
-      <p><a href="https://supabase.com/dashboard/projects" target="_blank">Supabase Projects</a></p>
-      <p><a href="https://t.me/BotFather" target="_blank">Telegram BotFather</a></p>
-    </div>
+    <div class="card"><div class="label">Monday</div><div class="value warn">Token Ready</div><p class="sub">Workflow mapping still pending.</p></div>
   </section>
   <section class="card" style="margin-top:16px">
-    <div class="label">Evidence Log Preview</div>
-    <div class="log" id="log">Mini App loaded.
-Repository: saifsoub/SS-agentic-ai-factory
-Runtime: GitHub Actions
-Status: waiting for next scheduled run or manual dispatch.</div>
+    <div class="label">Runtime Output</div>
+    <div class="log" id="log">Waiting for action...</div>
   </section>
 </div>
 <script>
 const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
 if (tg) { tg.ready(); tg.expand(); document.body.style.backgroundColor = tg.themeParams.bg_color || ''; }
 function tgAlert(message){ if(tg){ tg.showAlert(message); } else { alert(message); } }
+async function runAgents(){
+  const log=document.getElementById('log');
+  log.textContent='Dispatching GitHub Actions runtime...';
+  try{
+    const response=await fetch('/api/run-agents',{method:'POST'});
+    const data=await response.json();
+    log.textContent=JSON.stringify(data,null,2);
+    if(data.ok){tgAlert('Agents runtime dispatched');}
+  }catch(error){
+    log.textContent=String(error);
+  }
+}
 </script>
 </body>
 </html>
