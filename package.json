@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "revenue": "node workflows/revenue.workflow.js",
-    "monitor": "node workflows/monitoring.workflow.js"
+    "monitor": "node workflows/monitoring.workflow.js",
+    "agents": "node workflows/autonomous.loop.js"
   }
 }
