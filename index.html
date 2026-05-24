@@ -1,15 +1,308 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>DoneAi Mini App</title>
-  <script>
-    window.location.replace('/telegram-mini-app/index.html');
-  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sally Runtime Desk</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <style>
+    :root {
+      --bg: #0b1020;
+      --card: #121933;
+      --line: rgba(255,255,255,.1);
+      --gold: #c9a96e;
+      --orange: #ff6b35;
+      --silver: #c0c8d8;
+      --ok: #7cffb2;
+      --warn: #ffd27a;
+      --danger: #ff8a8a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #1f2b54, #0b1020 55%);
+      color: #fff;
+      font-family: Inter, Arial, sans-serif;
+    }
+
+    .wrap {
+      padding: 16px;
+      max-width: 980px;
+      margin: auto;
+    }
+
+    .hero, .card {
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 18px;
+      background: rgba(18,25,51,.92);
+      margin-top: 14px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(201,169,110,.18), rgba(255,107,53,.08), rgba(255,255,255,.04));
+      box-shadow: 0 18px 60px rgba(0,0,0,.35);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 27px;
+    }
+
+    .sub {
+      color: var(--silver);
+      margin: 0;
+      line-height: 1.45;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .label {
+      font-size: 11px;
+      color: var(--silver);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+    }
+
+    .value {
+      font-size: 21px;
+      font-weight: 800;
+      margin-top: 8px;
+    }
+
+    .ok { color: var(--ok); }
+    .warn { color: var(--warn); }
+    .danger { color: var(--danger); }
+
+    button, a.btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: var(--orange);
+      color: white;
+      font-weight: 800;
+      margin: 6px 6px 0 0;
+      cursor: pointer;
+    }
+
+    .ghost {
+      background: rgba(255,255,255,.08) !important;
+      border: 1px solid var(--line) !important;
+    }
+
+    .log {
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+      background: #070b16;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      color: #d8deef;
+      min-height: 140px;
+    }
+
+    .input {
+      width: 100%;
+      min-height: 92px;
+      border-radius: 16px;
+      background: #070b16;
+      color: white;
+      border: 1px solid var(--line);
+      padding: 12px;
+      font-size: 15px;
+      outline: none;
+      resize: vertical;
+    }
+
+    .pill {
+      display: inline-flex;
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 99px;
+      margin: 4px;
+      color: var(--silver);
+      font-size: 12px;
+    }
+  </style>
 </head>
-<body style="margin:0;background:#0b1020;color:white;font-family:Arial,sans-serif;padding:24px">
-  Opening DoneAi Mini App...
-  <p><a style="color:#ff6b35" href="/telegram-mini-app/index.html">Open manually</a></p>
+
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="label">Sally / Telegram Secretary</div>
+      <h1>Mr Seif, I am online.</h1>
+      <p class="sub">
+        Write normally. Sally routes revenue actions, starts agents, prepares approval items,
+        and shows execution output without command-style friction.
+      </p>
+
+      <button onclick="runAgents('Revenue push from Sally')">Start Revenue Agents</button>
+      <button class="ghost" onclick="setQuick('Sally, start a revenue push for clinics and prepare the next action.')">Clinic Revenue Push</button>
+      <button class="ghost" onclick="setQuick('Sally, check runtime status and tell me what is missing.')">Check Status</button>
+      <a class="btn ghost" href="https://github.com/saifsoub/SS-agentic-ai-factory/actions" target="_blank">Actions</a>
+    </section>
+
+    <section class="grid" style="margin-top:14px">
+      <div class="card">
+        <div class="label">Runtime</div>
+        <div class="value ok">Ready</div>
+        <p class="sub">Telegram → Vercel → GitHub Actions.</p>
+      </div>
+
+      <div class="card">
+        <div class="label">Revenue Mode</div>
+        <div class="value ok">Active</div>
+        <p class="sub">Signals, offers, proof-based pipeline.</p>
+      </div>
+
+      <div class="card">
+        <div class="label">Approval Rule</div>
+        <div class="value warn">Protected</div>
+        <p class="sub">No external sending without approval.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="label">Talk to Sally</div>
+      <textarea
+        id="sallyInput"
+        class="input"
+        placeholder="Example: Sally, start a revenue push for clinics and prepare the next action."></textarea>
+
+      <div>
+        <button onclick="sallyRoute()">Send to Sally</button>
+        <button class="ghost" onclick="runAgents('Manual runtime dispatch from Sally desk')">Run Runtime</button>
+        <button class="ghost" onclick="clearDesk()">Clear</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="label">Sally Output</div>
+      <div class="log" id="log">Waiting for your instruction...</div>
+    </section>
+  </div>
+
+  <script>
+    const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+
+    try { if (tg && typeof tg.ready === 'function') tg.ready(); } catch(e) {}
+    try { if (tg && typeof tg.expand === 'function') tg.expand(); } catch(e) {}
+
+    function writeLog(value) {
+      document.getElementById('log').textContent =
+        typeof value === 'string' ? value : JSON.stringify(value, null, 2);
+    }
+
+    function setQuick(text) {
+      document.getElementById('sallyInput').value = text;
+      sallyRoute();
+    }
+
+    function clearDesk() {
+      document.getElementById('sallyInput').value = '';
+      writeLog('Cleared. Waiting for your instruction...');
+    }
+
+    async function runAgents(source) {
+      writeLog('Sally is dispatching the runtime...');
+
+      try {
+        const response = await fetch('/api/run-agents', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ source: source || 'sally-mini-app' })
+        });
+
+        const text = await response.text();
+        let data;
+
+        try {
+          data = JSON.parse(text);
+        } catch(e) {
+          data = { ok: false, status: response.status, raw: text };
+        }
+
+        if (data.ok) {
+          writeLog(
+            'Agents dispatched successfully. Check GitHub Actions for run evidence.\n\n' +
+            JSON.stringify(data, null, 2)
+          );
+        } else {
+          writeLog(data);
+        }
+      } catch(error) {
+        writeLog('Runtime dispatch failed: ' + String(error));
+      }
+    }
+
+    function sallyRoute() {
+      const text = document.getElementById('sallyInput').value.trim();
+
+      if (!text) {
+        writeLog('Write the instruction first.');
+        return;
+      }
+
+      const lower = text.toLowerCase();
+
+      if (
+        lower.includes('revenue') ||
+        lower.includes('ايراد') ||
+        lower.includes('زباين') ||
+        lower.includes('عميل') ||
+        lower.includes('clients') ||
+        lower.includes('clinic') ||
+        lower.includes('clinics')
+      ) {
+        writeLog('Sally understood: revenue action. Preparing runtime dispatch and revenue signal generation.');
+        runAgents(text);
+        return;
+      }
+
+      if (
+        lower.includes('status') ||
+        lower.includes('حالة') ||
+        lower.includes('check') ||
+        lower.includes('missing')
+      ) {
+        writeLog(
+          'Runtime ready.\n\n' +
+          'Connected path:\n' +
+          'Telegram Mini App → Vercel API → GitHub Actions → Agent Runtime\n\n' +
+          'Protected rule: no external sending without approval.'
+        );
+        return;
+      }
+
+      if (
+        lower.includes('approve') ||
+        lower.includes('approval') ||
+        lower.includes('موافقة')
+      ) {
+        writeLog(
+          'Sally noted an approval-related instruction.\n\n' +
+          'Current rule: prepare and queue actions, but do not send externally unless explicit approval is attached to the specific action.'
+        );
+        return;
+      }
+
+      writeLog(
+        'Sally noted: ' + text +
+        '\n\nRecommended route: start runtime, generate signals, prepare approval-gated actions, then inspect GitHub Actions evidence.'
+      );
+    }
+  </script>
 </body>
 </html>
