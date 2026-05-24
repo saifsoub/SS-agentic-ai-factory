@@ -1,0 +1,23 @@
+[
+  {
+    "vertical": "clinics",
+    "offer": "7-Day Clinic Admin Automation Pilot",
+    "price_aed": 1500,
+    "buyer_pains": ["missed inquiries", "slow appointment follow-up", "manual WhatsApp/email admin", "no response tracking"],
+    "workflow": "Inquiry intake, appointment follow-up, reply tracking, no-show reduction"
+  },
+  {
+    "vertical": "real_estate",
+    "offer": "7-Day Real Estate Lead Response Pilot",
+    "price_aed": 1500,
+    "buyer_pains": ["late lead response", "lost portal leads", "manual follow-up", "no viewing reminders"],
+    "workflow": "Lead capture, response routing, follow-up sequence, viewing reminder"
+  },
+  {
+    "vertical": "salons",
+    "offer": "7-Day Salon Booking Follow-up Pilot",
+    "price_aed": 1500,
+    "buyer_pains": ["missed bookings", "manual reminders", "no-show losses", "slow Instagram/WhatsApp replies"],
+    "workflow": "Booking inquiry intake, reminder flow, rebooking prompt, simple owner dashboard"
+  }
+]
