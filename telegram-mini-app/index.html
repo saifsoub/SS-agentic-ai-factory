@@ -6,7 +6,7 @@
 <title>S/ Agent Runtime Mini App</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-:root{--bg:#0b1020;--card:#121933;--line:rgba(255,255,255,.1);--gold:#c9a96e;--orange:#ff6b35;--silver:#c0c8d8;--ok:#7cffb2;--warn:#ffd27a}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#1f2b54,#0b1020 55%);color:#fff;font-family:Inter,Arial,sans-serif}.wrap{padding:18px;max-width:980px;margin:auto}.hero{border:1px solid var(--line);border-radius:24px;padding:22px;background:linear-gradient(135deg,rgba(201,169,110,.18),rgba(255,107,53,.08),rgba(255,255,255,.04));box-shadow:0 18px 60px rgba(0,0,0,.35)}h1{margin:0 0 8px;font-size:28px}.sub{color:var(--silver);margin:0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:16px}.card{background:rgba(18,25,51,.92);border:1px solid var(--line);border-radius:20px;padding:16px}.label{font-size:12px;color:var(--silver);text-transform:uppercase;letter-spacing:.1em}.value{font-size:22px;font-weight:800;margin-top:8px}.ok{color:var(--ok)}.warn{color:var(--warn)}button,a.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border:0;border-radius:14px;padding:12px 14px;background:var(--orange);color:white;font-weight:800;margin:6px 6px 0 0;cursor:pointer}.ghost{background:rgba(255,255,255,.08)!important;border:1px solid var(--line)!important}.log{font-family:ui-monospace,Consolas,monospace;font-size:12px;white-space:pre-wrap;background:#070b16;border:1px solid var(--line);border-radius:16px;padding:14px;color:#d8deef;min-height:120px}.links a{color:#fff}.pill{display:inline-flex;padding:7px 10px;border:1px solid var(--line);border-radius:99px;margin:4px;color:var(--silver)}</style>
+:root{--bg:#0b1020;--card:#121933;--line:rgba(255,255,255,.1);--gold:#c9a96e;--orange:#ff6b35;--silver:#c0c8d8;--ok:#7cffb2;--warn:#ffd27a}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#1f2b54,#0b1020 55%);color:#fff;font-family:Inter,Arial,sans-serif}.wrap{padding:18px;max-width:980px;margin:auto}.hero{border:1px solid var(--line);border-radius:24px;padding:22px;background:linear-gradient(135deg,rgba(201,169,110,.18),rgba(255,107,53,.08),rgba(255,255,255,.04));box-shadow:0 18px 60px rgba(0,0,0,.35)}h1{margin:0 0 8px;font-size:28px}.sub{color:var(--silver);margin:0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:16px}.card{background:rgba(18,25,51,.92);border:1px solid var(--line);border-radius:20px;padding:16px}.label{font-size:12px;color:var(--silver);text-transform:uppercase;letter-spacing:.1em}.value{font-size:22px;font-weight:800;margin-top:8px}.ok{color:var(--ok)}.warn{color:var(--warn)}button,a.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border:0;border-radius:14px;padding:12px 14px;background:var(--orange);color:white;font-weight:800;margin:6px 6px 0 0;cursor:pointer}.ghost{background:rgba(255,255,255,.08)!important;border:1px solid var(--line)!important}.log{font-family:ui-monospace,Consolas,monospace;font-size:12px;white-space:pre-wrap;background:#070b16;border:1px solid var(--line);border-radius:16px;padding:14px;color:#d8deef;min-height:120px}.pill{display:inline-flex;padding:7px 10px;border:1px solid var(--line);border-radius:99px;margin:4px;color:var(--silver)}</style>
 </head>
 <body>
 <div class="wrap">
@@ -15,12 +15,12 @@
     <h1>Agent Runtime Mini App</h1>
     <p class="sub">Telegram execution layer for GitHub Actions, runtime orchestration, logs, and operations.</p>
     <button onclick="runAgents()">Run Agents</button>
-    <button class="ghost" onclick="tgAlert('Telegram runtime connected')">Telegram Ping</button>
+    <button class="ghost" onclick="safePing()">Telegram Ping</button>
     <a class="btn ghost" href="https://github.com/saifsoub/SS-agentic-ai-factory/actions" target="_blank">Open GitHub Actions</a>
   </section>
   <section class="grid">
     <div class="card"><div class="label">Runtime</div><div class="value ok">Ready</div><p class="sub">GitHub Actions scheduled hourly.</p></div>
-    <div class="card"><div class="label">Telegram</div><div class="value ok">Connected</div><p class="sub">Bot token and chat id configured in secrets.</p></div>
+    <div class="card"><div class="label">Telegram</div><div class="value ok">Connected</div><p class="sub">Mini App safe mode enabled.</p></div>
     <div class="card"><div class="label">Supabase</div><div class="value ok">Prepared</div><p class="sub">Persistence runtime is available.</p></div>
     <div class="card"><div class="label">Monday</div><div class="value warn">Token Ready</div><p class="sub">Workflow mapping still pending.</p></div>
   </section>
@@ -31,18 +31,20 @@
 </div>
 <script>
 const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
-if (tg) { tg.ready(); tg.expand(); document.body.style.backgroundColor = tg.themeParams.bg_color || ''; }
-function tgAlert(message){ if(tg){ tg.showAlert(message); } else { alert(message); } }
+try { if (tg && typeof tg.ready === 'function') tg.ready(); } catch(e) {}
+try { if (tg && typeof tg.expand === 'function') tg.expand(); } catch(e) {}
+function writeLog(value){ document.getElementById('log').textContent = typeof value === 'string' ? value : JSON.stringify(value,null,2); }
+function safePing(){ writeLog('Telegram Mini App loaded. Safe mode active.'); }
 async function runAgents(){
-  const log=document.getElementById('log');
-  log.textContent='Dispatching GitHub Actions runtime...';
+  writeLog('Dispatching GitHub Actions runtime...');
   try{
-    const response=await fetch('/api/run-agents',{method:'POST'});
-    const data=await response.json();
-    log.textContent=JSON.stringify(data,null,2);
-    if(data.ok){tgAlert('Agents runtime dispatched');}
+    const response=await fetch('/api/run-agents',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({source:'telegram-mini-app'})});
+    const text=await response.text();
+    let data;
+    try{ data=JSON.parse(text); }catch(e){ data={ok:false,status:response.status,raw:text}; }
+    writeLog(data);
   }catch(error){
-    log.textContent=String(error);
+    writeLog('Runtime dispatch failed: '+String(error));
   }
 }
 </script>
