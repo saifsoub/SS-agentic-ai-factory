@@ -1,0 +1,8 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "destination": "/telegram-mini-app/index.html" },
+    { "source": "/mini", "destination": "/telegram-mini-app/index.html" },
+    { "source": "/control", "destination": "/control-panel/index.html" }
+  ]
+}
