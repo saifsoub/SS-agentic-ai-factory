@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>S/ Agent Runtime Mini App</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--bg:#0b1020;--card:#121933;--line:rgba(255,255,255,.1);--gold:#c9a96e;--orange:#ff6b35;--silver:#c0c8d8;--ok:#7cffb2;--warn:#ffd27a}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#1f2b54,#0b1020 55%);color:#fff;font-family:Inter,Arial,sans-serif}.wrap{padding:18px;max-width:980px;margin:auto}.hero{border:1px solid var(--line);border-radius:24px;padding:22px;background:linear-gradient(135deg,rgba(201,169,110,.18),rgba(255,107,53,.08),rgba(255,255,255,.04));box-shadow:0 18px 60px rgba(0,0,0,.35)}h1{margin:0 0 8px;font-size:28px}.sub{color:var(--silver);margin:0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:16px}.card{background:rgba(18,25,51,.92);border:1px solid var(--line);border-radius:20px;padding:16px}.label{font-size:12px;color:var(--silver);text-transform:uppercase;letter-spacing:.1em}.value{font-size:22px;font-weight:800;margin-top:8px}.ok{color:var(--ok)}.warn{color:var(--warn)}button,a.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border:0;border-radius:14px;padding:12px 14px;background:var(--orange);color:white;font-weight:800;margin:6px 6px 0 0;cursor:pointer}.ghost{background:rgba(255,255,255,.08)!important;border:1px solid var(--line)!important}.log{font-family:ui-monospace,Consolas,monospace;font-size:12px;white-space:pre-wrap;background:#070b16;border:1px solid var(--line);border-radius:16px;padding:14px;color:#d8deef;min-height:120px}.links a{color:#fff}.pill{display:inline-flex;padding:7px 10px;border:1px solid var(--line);border-radius:99px;margin:4px;color:var(--silver)}</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <div class="label">S/ AI Empowered</div>
+    <h1>Agent Runtime Mini App</h1>
+    <p class="sub">Telegram control layer for GitHub Actions, agent status, secrets checklist, logs, and operating links.</p>
+    <button onclick="tgAlert('Runtime control loaded')">Telegram Ping</button>
+    <a class="btn ghost" href="https://github.com/saifsoub/SS-agentic-ai-factory/actions" target="_blank">Open GitHub Actions</a>
+  </section>
+  <section class="grid">
+    <div class="card"><div class="label">Runtime</div><div class="value ok">Ready</div><p class="sub">GitHub Actions scheduled hourly.</p></div>
+    <div class="card"><div class="label">Telegram</div><div class="value ok">Connected</div><p class="sub">Bot token and chat id configured in secrets.</p></div>
+    <div class="card"><div class="label">Supabase</div><div class="value ok">Prepared</div><p class="sub">Persistence runtime is available.</p></div>
+    <div class="card"><div class="label">Monday</div><div class="value warn">Token Ready</div><p class="sub">Live board mutation still needs final workflow mapping.</p></div>
+  </section>
+  <section class="grid">
+    <div class="card">
+      <div class="label">Secrets Checklist</div>
+      <span class="pill">MONDAY_API_TOKEN</span><span class="pill">SUPABASE_URL</span><span class="pill">SUPABASE_SERVICE_ROLE_KEY</span><span class="pill">TELEGRAM_BOT_TOKEN</span><span class="pill">TELEGRAM_CHAT_ID</span>
+    </div>
+    <div class="card links">
+      <div class="label">Direct Links</div>
+      <p><a href="https://github.com/saifsoub/SS-agentic-ai-factory/settings/secrets/actions" target="_blank">GitHub Secrets</a></p>
+      <p><a href="https://github.com/saifsoub/SS-agentic-ai-factory/actions" target="_blank">Runtime Runs</a></p>
+      <p><a href="https://developer.monday.com/apps" target="_blank">Monday Developer Center</a></p>
+      <p><a href="https://supabase.com/dashboard/projects" target="_blank">Supabase Projects</a></p>
+      <p><a href="https://t.me/BotFather" target="_blank">Telegram BotFather</a></p>
+    </div>
+  </section>
+  <section class="card" style="margin-top:16px">
+    <div class="label">Evidence Log Preview</div>
+    <div class="log" id="log">Mini App loaded.
+Repository: saifsoub/SS-agentic-ai-factory
+Runtime: GitHub Actions
+Status: waiting for next scheduled run or manual dispatch.</div>
+  </section>
+</div>
+<script>
+const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+if (tg) { tg.ready(); tg.expand(); document.body.style.backgroundColor = tg.themeParams.bg_color || ''; }
+function tgAlert(message){ if(tg){ tg.showAlert(message); } else { alert(message); } }
+</script>
+</body>
+</html>
