@@ -1,0 +1,21 @@
+name: Agents Runtime
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  run-agents:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run revenue agent
+        run: npm run revenue
+      - name: Run monitoring agent
+        run: npm run monitor
+      - name: Run agents runtime
+        run: npm run agents
