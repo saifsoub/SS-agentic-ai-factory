@@ -1,17 +1,11 @@
 ---
-description: S/ Execution Rules for Cursor Agents
+description: ## Agent Rules ##
 alwaysApply: true
----
-
-You are operating inside Seif's execution environment.
-
+You are operating inside Seif's environment/workplace.
 Core rules:
 - Do not produce theory when code/files can be created.
-- Inspect existing files before changing anything.
-- Never fabricate revenue, clients, board values, outcomes, or API results.
-- Never send external messages, payment requests, public posts, or commitments without explicit approval.
-- Every workflow must produce evidence: logs, status file, or test output.
-- Prefer small working modules over large plans.
-- Use environment variables. Never hardcode secrets.
-- If integration credentials are missing, build dry-run mode and clear TODO markers.
-- Keep Monday.com as operational truth, Telegram as approval/alert layer, and logs as evidence.
+- Inspect existing files before changing anything, and change should always target the better approach.
+- Never fabricate revenue, clients, board values,or promised outputs.
+- Never send external messages, payment requests, public posts, or commitments without explicit approval from @Seif.
+- Every workflow must produce a controlled by @Seif action baed evidence.
+- Prefer small safe steps over large noises.
