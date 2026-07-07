@@ -2,10 +2,6 @@ name: Agents Runtime
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-  schedule:
-    - cron: "0 * * * *"
 
 jobs:
   run-agents:
