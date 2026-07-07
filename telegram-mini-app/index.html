@@ -16,7 +16,7 @@
     <p class="sub">Telegram execution layer for GitHub Actions, runtime orchestration, logs, and operations.</p>
     <button onclick="runAgents()">Run Agents</button>
     <button class="ghost" onclick="safePing()">Telegram Ping</button>
-    <a class="btn ghost" href="https://github.com/saifsoub/SS-agentic-ai-factory/actions" target="_blank">Open GitHub Actions</a>
+    <a class="btn ghost" href="https://github.com/saifsoub/SS-agentic-ai-factory/actions" target="_blank" rel="noopener noreferrer" onclick="openExternalLink(this.href); return false;">Open GitHub Actions</a>
   </section>
   <section class="grid">
     <div class="card"><div class="label">Runtime</div><div class="value ok">Ready</div><p class="sub">GitHub Actions scheduled hourly.</p></div>
@@ -33,6 +33,13 @@
 const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
 try { if (tg && typeof tg.ready === 'function') tg.ready(); } catch(e) {}
 try { if (tg && typeof tg.expand === 'function') tg.expand(); } catch(e) {}
+function openExternalLink(url){
+  if (tg && typeof tg.openLink === 'function') {
+    tg.openLink(url);
+    return;
+  }
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
 function writeLog(value){ document.getElementById('log').textContent = typeof value === 'string' ? value : JSON.stringify(value,null,2); }
 function safePing(){ writeLog('Telegram Mini App loaded. Safe mode active.'); }
 async function runAgents(){
