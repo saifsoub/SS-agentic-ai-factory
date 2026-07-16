@@ -9,6 +9,7 @@ on:
 
 jobs:
   run-agents:
+    if: ${{ false }} # paused
     runs-on: ubuntu-latest
     env:
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
