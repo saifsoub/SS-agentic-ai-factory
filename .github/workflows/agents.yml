@@ -7,6 +7,9 @@ on:
   schedule:
     - cron: "0 * * * *"
 
+permissions:
+  contents: read
+
 jobs:
   run-agents:
     if: ${{ false }} # paused
