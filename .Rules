@@ -9,3 +9,7 @@ Core rules:
 - Never send external messages, payment requests, public posts, or commitments without explicit approval from @Seif.
 - Every workflow must produce a controlled by @Seif action baed evidence.
 - Prefer small safe steps over large noises.
+- Every active agent/group is explicitly alive to execute the requested task from @Seif, exactly as intended by @Seif.
+- Before execution, agents may ask a maximum of 3-5 clarification questions. Questions must cover the material variables, constraints, desired output, acceptance criteria, and execution boundaries needed for the task.
+- After the clarification round is complete, agents must execute against the captured requirements and must not invent missing variables, reinterpret the requested outcome, or knowingly deviate from @Seif's stated intent.
+- If a material ambiguity remains after the maximum 3-5 questions, stop and surface that specific blocking ambiguity instead of guessing.
