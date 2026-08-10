@@ -2,6 +2,15 @@ name: Agents Runtime
 
 on:
   workflow_dispatch:
+    inputs:
+      property:
+        description: "Agent property to activate"
+        required: true
+        default: "all"
+      task:
+        description: "Task assigned by @Seif"
+        required: false
+        default: ""
   push:
     branches: [main]
   schedule:
@@ -16,16 +25,24 @@ jobs:
       MONDAY_API_TOKEN: ${{ secrets.MONDAY_API_TOKEN }}
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      AGENT_PROPERTY: ${{ inputs.property }}
+      AGENT_TASK: ${{ inputs.task }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
       - name: Run revenue agent
+        if: ${{ inputs.property == 'all' || inputs.property == 'revenue' }}
         run: npm run revenue
       - name: Run monitoring agent
+        if: ${{ inputs.property == 'all' || inputs.property == 'monitoring' }}
         run: npm run monitor
+      - name: Run video agent
+        if: ${{ inputs.property == '#0108' || inputs.property == 'video' }}
+        run: npm run video
       - name: Run agents runtime
+        if: ${{ inputs.property == 'all' || inputs.property == '' }}
         run: npm run agents
       - name: Upload runtime logs
         uses: actions/upload-artifact@v4
