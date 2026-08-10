@@ -5,6 +5,7 @@
   "scripts": {
     "revenue": "node workflows/revenue.workflow.js",
     "monitor": "node workflows/monitoring.workflow.js",
+    "video": "node workflows/video-agent.workflow.js",
     "agents": "node workflows/agent-runtime.js",
     "loop": "node workflows/autonomous.loop.js"
   }
