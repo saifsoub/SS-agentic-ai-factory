@@ -25,8 +25,8 @@ jobs:
       MONDAY_API_TOKEN: ${{ secrets.MONDAY_API_TOKEN }}
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-      AGENT_PROPERTY: ${{ inputs.property }}
-      AGENT_TASK: ${{ inputs.task }}
+      AGENT_PROPERTY: ${{ inputs.property || (github.event_name == 'push' && contains(github.event.head_commit.message, 'Activate Video Agent') && '#0108') || '' }}
+      AGENT_TASK: ${{ inputs.task || (github.event_name == 'push' && contains(github.event.head_commit.message, 'Activate Video Agent') && github.event.head_commit.message) || '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -39,7 +39,7 @@ jobs:
         if: ${{ inputs.property == 'all' || inputs.property == 'monitoring' }}
         run: npm run monitor
       - name: Run video agent
-        if: ${{ inputs.property == '#0108' || inputs.property == 'video' }}
+        if: ${{ inputs.property == '#0108' || inputs.property == 'video' || (github.event_name == 'push' && contains(github.event.head_commit.message, 'Activate Video Agent')) }}
         run: npm run video
       - name: Run agents runtime
         if: ${{ inputs.property == 'all' || inputs.property == '' }}
