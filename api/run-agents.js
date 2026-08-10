@@ -14,6 +14,17 @@ export default async function handler(request, response) {
   const token = process.env.GITHUB_RUNTIME_TOKEN || process.env.GITHUB_TOKEN;
   if (!token) return response.status(500).json({ ok: false, error: 'missing_github_token' });
 
+  let body = {};
+  try {
+    body = typeof request.body === 'string' ? JSON.parse(request.body || '{}') : (request.body || {});
+  } catch {
+    return response.status(400).json({ ok: false, error: 'invalid_json' });
+  }
+
+  const property = body.property || 'all';
+  const task = body.task || '';
+
+  const inputs = { property, task };
   const githubResponse = await fetch('https://api.github.com/repos/saifsoub/SS-agentic-ai-factory/actions/workflows/agents.yml/dispatches', {
     method: 'POST',
     headers: {
@@ -22,8 +33,8 @@ export default async function handler(request, response) {
       'content-type': 'application/json',
       'x-github-api-version': '2022-11-28'
     },
-    body: JSON.stringify({ ref: 'main' })
+    body: JSON.stringify({ ref: 'main', inputs })
   });
 
-  return response.status(githubResponse.ok ? 200 : githubResponse.status).json({ ok: githubResponse.ok, status: githubResponse.status });
+  return response.status(githubResponse.ok ? 200 : githubResponse.status).json({ ok: githubResponse.ok, status: githubResponse.status, property, task });
 }
