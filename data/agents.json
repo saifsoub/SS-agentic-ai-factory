@@ -1,0 +1,11 @@
+[
+  {
+    "property": "#0108",
+    "name": "Video Agent",
+    "owner": "@Seif",
+    "state": "dormant_by_default",
+    "activation": "explicit_seif_invocation",
+    "approval": "required_for_consequential_actions",
+    "default_state": "silence"
+  }
+]
