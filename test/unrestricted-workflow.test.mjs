@@ -6,6 +6,7 @@ const workflowPath = new URL(
   "../.github/workflows/unrestricted-factory.yml",
   import.meta.url,
 );
+const ciPath = new URL("../.github/workflows/ci.yml", import.meta.url);
 
 test("unrestricted executor has no S/Agency operational secrets", async () => {
   const workflow = await readFile(workflowPath, "utf8");
@@ -44,4 +45,10 @@ test("only validated output is uploaded", async () => {
   assert.ok(validation >= 0, "output validation step is required");
   assert.ok(upload > validation, "artifact upload must happen after validation");
   assert.match(workflow, /path:\s*workspace\/output\//);
+});
+
+test("pull requests run the factory security tests", async () => {
+  const ci = await readFile(ciPath, "utf8");
+  assert.match(ci, /pull_request:/);
+  assert.match(ci, /npm test/);
 });
