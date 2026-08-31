@@ -1,0 +1,18 @@
+{
+  "name": "@s-agency/browser-runtime-stack",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "bootstrap": "node bootstrap.mjs",
+    "verify": "node verify.mjs",
+    "agent-browser": "agent-browser"
+  },
+  "dependencies": {
+    "@browserbasehq/stagehand": "4.0.2",
+    "agent-browser": "0.35.2"
+  }
+}

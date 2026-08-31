@@ -1,0 +1,34 @@
+name: Browser Runtime Stack
+
+on:
+  push:
+    branches:
+      - feat/browser-runtime-stack
+    paths:
+      - "runtime/browser-stack/**"
+      - "package.json"
+      - ".github/workflows/browser-runtime-stack.yml"
+  pull_request:
+    paths:
+      - "runtime/browser-stack/**"
+      - "package.json"
+      - ".github/workflows/browser-runtime-stack.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  install-and-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      AGENT_BROWSER_INSTALL_WITH_DEPS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Bootstrap all three browser engines
+        run: npm run browser:bootstrap
+      - name: Verify browser runtime
+        run: npm run browser:verify
