@@ -49,7 +49,8 @@ if (!existsSync(join(OPENBROWSER_DIR, ".git"))) {
 }
 run("git", ["checkout", "--detach", OPENBROWSER_COMMIT], OPENBROWSER_DIR);
 pnpm(["install", "--frozen-lockfile"], OPENBROWSER_DIR);
-pnpm(["build"], OPENBROWSER_DIR);
+// Call the recursive workspace build directly so it also works when pnpm is supplied by Corepack only.
+pnpm(["-r", "--sequential", "build"], OPENBROWSER_DIR);
 
 console.log("\nS/Browser Stack bootstrap complete.");
 console.log("- OpenBrowser: source installed and built at pinned commit");
