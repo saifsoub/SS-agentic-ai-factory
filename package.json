@@ -7,6 +7,9 @@
     "monitor": "node workflows/monitoring.workflow.js",
     "video": "node workflows/video-agent.workflow.js",
     "agents": "node workflows/agent-runtime.js",
-    "loop": "node workflows/autonomous.loop.js"
+    "loop": "node workflows/autonomous.loop.js",
+    "browser:bootstrap": "node runtime/browser-stack/bootstrap.mjs",
+    "browser:verify": "node runtime/browser-stack/verify.mjs",
+    "browser:agent": "cd runtime/browser-stack && npx --no-install agent-browser"
   }
 }
