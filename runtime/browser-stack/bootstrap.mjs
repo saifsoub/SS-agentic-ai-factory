@@ -37,7 +37,9 @@ mkdirSync(VENDOR_DIR, { recursive: true });
 run("npm", ["install", "--no-audit", "--no-fund"], HERE);
 
 // 2) Install the Chrome-for-Testing runtime used by agent-browser.
-run("npx", ["--no-install", "agent-browser", "install"], HERE);
+const chromeInstallArgs = ["--no-install", "agent-browser", "install"];
+if (process.env.AGENT_BROWSER_INSTALL_WITH_DEPS === "1") chromeInstallArgs.push("--with-deps");
+run("npx", chromeInstallArgs, HERE);
 
 // 3) Materialize OpenBrowser at an explicit reviewed commit, then install/build it.
 if (!existsSync(join(OPENBROWSER_DIR, ".git"))) {
