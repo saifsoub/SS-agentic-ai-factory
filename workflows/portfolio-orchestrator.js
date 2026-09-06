@@ -16,9 +16,21 @@ function headers(extra = {}) {
   };
 }
 
+function supabaseBase() {
+  const raw = env('SUPABASE_URL').replace(/\/$/, '');
+  return raw.endsWith('/rest/v1') ? raw : `${raw}/rest/v1`;
+}
+
+let endpointLogged = false;
 async function sb(path, options = {}) {
-  const base = env('SUPABASE_URL').replace(/\/$/, '');
-  const response = await fetch(`${base}/rest/v1/${path}`, {
+  const base = supabaseBase();
+  if (!endpointLogged) {
+    endpointLogged = true;
+    let host = 'invalid_url';
+    try { host = new URL(base).host; } catch (_) {}
+    console.log(JSON.stringify({ diagnostic: 'portfolio_supabase_endpoint', host, includes_rest_v1: base.endsWith('/rest/v1'), first_path: path.split('?')[0] }));
+  }
+  const response = await fetch(`${base}/${path}`, {
     ...options,
     headers: headers(options.headers || {})
   });
