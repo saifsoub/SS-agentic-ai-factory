@@ -4,9 +4,13 @@ const { runAutonomousLoop } = require('./autonomous.loop');
 const { sendTelegram } = require('./live-telegram');
 const { generateSignals } = require('./revenue-signal-loop');
 const { generateOfferPacks } = require('./offer-pack-generator');
+const { runPortfolioOrchestrator } = require('./portfolio-orchestrator');
 
 async function startAgents() {
+  const portfolio = await runPortfolioOrchestrator();
+
   const runtime = {
+    portfolio_orchestrator: portfolio,
     revenue_agent: runRevenueWorkflow({ source: 'agent_runtime' }),
     monitoring_agent: runMonitoringWorkflow(),
     operator_agent: runAutonomousLoop(),
@@ -16,7 +20,13 @@ async function startAgents() {
     status: 'running'
   };
 
-  await sendTelegram('✅ SS Agent Runtime Started');
+  const totals = portfolio && portfolio.totals ? portfolio.totals : {};
+  await sendTelegram(
+    `✅ S/Factory orchestration cycle running\n` +
+    `Companies mapped: ${totals.mapped_companies ?? 'n/a'}\n` +
+    `Urgent items: ${totals.urgent_items ?? 'n/a'}\n` +
+    `Open items: ${totals.open_items ?? 'n/a'}`
+  );
 
   return runtime;
 }
