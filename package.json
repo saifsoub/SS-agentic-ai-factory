@@ -6,7 +6,6 @@
     "revenue": "node workflows/revenue.workflow.js",
     "monitor": "node workflows/monitoring.workflow.js",
     "video": "node workflows/video-agent.workflow.js",
-    "test:video": "node tests/video-agent.test.mjs",
     "agents": "node workflows/agent-runtime.js",
     "loop": "node workflows/autonomous.loop.js",
     "browser:bootstrap": "node runtime/browser-stack/bootstrap.mjs",
