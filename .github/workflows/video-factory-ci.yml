@@ -5,7 +5,6 @@ on:
     paths:
       - "workflows/video-agent.workflow.js"
       - "tests/video-agent.test.mjs"
-      - "package.json"
       - ".github/workflows/agents.yml"
       - ".github/workflows/video-factory-ci.yml"
   workflow_dispatch:
@@ -23,7 +22,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ffmpeg
       - name: Render and validate a real MP4
-        run: npm run test:video
+        run: node tests/video-agent.test.mjs
       - name: Upload acceptance video
         uses: actions/upload-artifact@v4
         with:
