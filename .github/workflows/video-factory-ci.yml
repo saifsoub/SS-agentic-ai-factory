@@ -1,0 +1,37 @@
+name: Video Factory CI
+
+on:
+  pull_request:
+    paths:
+      - "workflows/video-agent.workflow.js"
+      - "tests/video-agent.test.mjs"
+      - ".github/workflows/agents.yml"
+      - ".github/workflows/video-factory-ci.yml"
+  workflow_dispatch:
+
+jobs:
+  render-and-probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install ffmpeg runtime
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+      - name: Render and validate a real MP4
+        run: node tests/video-agent.test.mjs
+      - name: Upload acceptance video
+        uses: actions/upload-artifact@v4
+        with:
+          name: video-factory-acceptance-${{ github.run_id }}
+          path: artifacts/video-factory/acceptance-test.mp4
+          if-no-files-found: error
+      - name: Upload evidence log
+        uses: actions/upload-artifact@v4
+        with:
+          name: video-factory-evidence-${{ github.run_id }}
+          path: logs/video-agent.json
+          if-no-files-found: error
