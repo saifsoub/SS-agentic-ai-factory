@@ -39,14 +39,36 @@ jobs:
       - name: Run monitoring agent
         if: ${{ inputs.property == 'all' || inputs.property == 'monitoring' }}
         run: npm run monitor
+      - name: Install video runtime
+        if: ${{ inputs.property == '#0108' || inputs.property == 'video' || (github.event_name == 'push' && contains(github.event.head_commit.message, 'Activate Video Agent')) }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+          ffmpeg -version | head -1
+          ffprobe -version | head -1
       - name: Run video agent
         if: ${{ inputs.property == '#0108' || inputs.property == 'video' || (github.event_name == 'push' && contains(github.event.head_commit.message, 'Activate Video Agent')) }}
         run: npm run video
+      - name: Verify video artifact
+        if: ${{ inputs.property == '#0108' || inputs.property == 'video' || (github.event_name == 'push' && contains(github.event.head_commit.message, 'Activate Video Agent')) }}
+        run: |
+          test -n "$(find artifacts/video-factory -maxdepth 1 -name '*.mp4' -print -quit)"
+          VIDEO_FILE="$(find artifacts/video-factory -maxdepth 1 -name '*.mp4' -print -quit)"
+          ffprobe -v error -show_entries stream=codec_name,width,height -show_entries format=duration,size -of json "$VIDEO_FILE"
+      - name: Upload playable video
+        if: ${{ always() && (inputs.property == '#0108' || inputs.property == 'video' || (github.event_name == 'push' && contains(github.event.head_commit.message, 'Activate Video Agent'))) }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: video-factory-output-${{ github.run_id }}
+          path: artifacts/video-factory/*.mp4
+          if-no-files-found: error
       - name: Run agents runtime
         if: ${{ github.event_name == 'schedule' || inputs.property == 'all' || inputs.property == '' }}
         run: npm run agents
       - name: Upload runtime logs
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: runtime-logs
+          name: runtime-logs-${{ github.run_id }}
           path: logs/
+          if-no-files-found: warn
