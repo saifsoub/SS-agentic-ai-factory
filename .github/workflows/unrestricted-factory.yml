@@ -1,0 +1,110 @@
+name: Unrestricted Factory Executor
+
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "Build task for the isolated S/Factory executor"
+        required: true
+        type: string
+
+permissions: {}
+
+concurrency:
+  group: unrestricted-factory-${{ github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  prepare-validator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout trusted validator only
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            scripts/unrestricted-output-policy.mjs
+            scripts/verify-unrestricted-output.mjs
+          sparse-checkout-cone-mode: false
+      - name: Package trusted validator
+        uses: actions/upload-artifact@v4
+        with:
+          name: unrestricted-factory-validator
+          path: scripts/
+          if-no-files-found: error
+          retention-days: 1
+
+  execute:
+    needs: prepare-validator
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    permissions: {}
+    env:
+      COPILOT_GITHUB_TOKEN: ${{ secrets.S_FACTORY_EXECUTOR_COPILOT_TOKEN }}
+      FACTORY_TASK: ${{ inputs.task }}
+    steps:
+      - name: Retrieve trusted validator
+        uses: actions/download-artifact@v4
+        with:
+          name: unrestricted-factory-validator
+          path: trusted
+
+      - name: Fail closed without the executor identity
+        shell: bash
+        run: |
+          if [ -z "$COPILOT_GITHUB_TOKEN" ]; then
+            echo "S_FACTORY_EXECUTOR_COPILOT_TOKEN is not configured." >&2
+            exit 1
+          fi
+
+      - name: Prepare empty disposable workspace
+        shell: bash
+        run: |
+          mkdir -p workspace/input workspace/output
+          printf '%s' "$FACTORY_TASK" > workspace/input/task.txt
+          chmod -R u+rwX,go-rwx workspace
+
+      - name: Run unrestricted Copilot inside Docker
+        shell: bash
+        run: |
+          docker run --rm \
+            --security-opt no-new-privileges \
+            --cap-drop ALL \
+            --user "$(id -u):$(id -g)" \
+            --pids-limit 512 \
+            --memory 4g \
+            --cpus 2 \
+            --network bridge \
+            -e COPILOT_GITHUB_TOKEN \
+            -e HOME=/tmp \
+            -v "$PWD/workspace:/workspace" \
+            -w /workspace \
+            node:22-bookworm \
+            bash -lc '
+              npm install --global --prefix /tmp/copilot @github/copilot@1.0.79
+              TASK_TEXT=$(cat /workspace/input/task.txt)
+              /tmp/copilot/bin/copilot -p "Execute this S/Factory task completely. Work only inside /workspace/output and place every deliverable there. Task: ${TASK_TEXT}" \
+                --allow-all-tools \
+                --allow-all-paths \
+                --allow-all-urls \
+                --no-ask-user
+            '
+
+      - name: Remove executor credential from later steps
+        shell: bash
+        run: echo "COPILOT_GITHUB_TOKEN=" >> "$GITHUB_ENV"
+
+      - name: Validate artifact boundary
+        shell: bash
+        run: node trusted/verify-unrestricted-output.mjs workspace/output
+
+      - name: Upload validated factory output
+        uses: actions/upload-artifact@v4
+        with:
+          name: unrestricted-factory-output-${{ github.run_id }}
+          path: workspace/output/
+          if-no-files-found: error
+          retention-days: 7
