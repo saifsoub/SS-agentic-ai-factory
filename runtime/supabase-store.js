@@ -6,7 +6,10 @@ async function saveRun(record = {}) {
   const table = process.env.SUPABASE_RUNS_TABLE || 'agent_runs';
 
   if (!url || !key) {
-    return logEvent('supabase', { ok: false, mode: 'dry_run', table, record });
+    const missing = ['SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY'].filter((name) => !process.env[name]);
+    const result = { ok: false, error: 'Supabase persistence is not configured', missing, table };
+    logEvent('supabase', result);
+    throw new Error(result.error + ': ' + missing.join(', '));
   }
 
   const endpoint = url.replace(/\/$/, '') + '/rest/v1/' + table;
