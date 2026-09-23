@@ -5,9 +5,9 @@ async function sendTelegram(text) {
   const chat = process.env.TELEGRAM_CHAT_ID;
   if (!token || !chat) {
     const missing = ['TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID'].filter((key) => !process.env[key]);
-    const result = { ok: false, mode: 'dry_run', missing, text };
+    const result = { ok: false, error: 'Telegram delivery is not configured', missing };
     logEvent('telegram', result);
-    return result;
+    throw new Error(result.error + ': ' + missing.join(', '));
   }
 
   const url = 'https://api.telegram.org/bot' + token + '/sendMessage';
