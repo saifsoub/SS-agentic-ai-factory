@@ -17,12 +17,12 @@ async function startAgents() {
     revenue_signals: generateSignals(),
     offer_packs: generateOfferPacks(),
     started_at: new Date().toISOString(),
-    status: 'running'
+    status: 'cycle_complete'
   };
 
   const totals = portfolio && portfolio.totals ? portfolio.totals : {};
   await sendTelegram(
-    `✅ S/Factory orchestration cycle running\n` +
+    `✅ S/Factory orchestration cycle completed\n` +
     `Companies mapped: ${totals.mapped_companies ?? 'n/a'}\n` +
     `Urgent items: ${totals.urgent_items ?? 'n/a'}\n` +
     `Open items: ${totals.open_items ?? 'n/a'}`
