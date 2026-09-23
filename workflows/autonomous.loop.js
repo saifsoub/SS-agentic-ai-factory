@@ -6,7 +6,7 @@ function runAutonomousLoop() {
     started_at: new Date().toISOString(),
     revenue: runRevenueWorkflow({ source: 'loop' }),
     monitoring: runMonitoringWorkflow(),
-    mode: 'continuous_ready'
+    mode: 'cycle_complete'
   };
 }
 
