@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "verify:unrestricted-output": "node scripts/verify-unrestricted-output.mjs",
     "revenue": "node workflows/revenue.workflow.js",
     "monitor": "node workflows/monitoring.workflow.js",
     "video": "node workflows/video-agent.workflow.js",
